@@ -1,0 +1,84 @@
+
+
+Mongodb Assignment
+
+Instructions:
+ Write MongoDB queries to retrieve information from the provided products collection.
+ Use the given document structure for the products collection.
+ Execute each query in the MongoDB shell.
+MongoDB Document Structure:
+ json
+ 
+ { "_id": ObjectId("123456789012345678901234"), "product_name": "Smartphone", "brand": "BrandX",
+ "price": 599.99, "stock_quantity": 100, "category": ["Electronics", "Mobile"],
+ "attributes": { "color": "Black", "storage": "128GB", "RAM": "8GB" },
+ "reviews": [ { "user_id": ObjectId("987654321098765432109876"), "rating": 4, "comment": "Great phone!" }, 
+{ "user_id": ObjectId("567890123456789012345678"), "rating": 5, "comment": "Best phone I've ever had!" } ] } 
+
+
+ 
+
+ * Retrieve all products in the "Electronics" category.
+
+ 1. db.products.find({category:"Electronics"})
+
+ * Find all products with a price less than $500.
+
+ 2. db.products.find({price:{$lt : 500}})
+
+ * Retrieve all products with a rating greater than 4.
+
+ 3. db.products.find({"reviews.rating" : {$gte : 4}})
+
+ * Find all products with a specific color (e.g., Black).
+
+ 4. db.proucts.find({"attributes.color" : "black"})
+
+ * Retrieve all products sorted by price in descending order.
+
+ 5. db.products.find().sort({ price : -1 })
+
+ * Calculate the average rating of all products.
+
+ 6. db.products.aggregate([{$unwind : "$reviews"},{$group : {_id : null,averageRating : {$avg: "$reviews.rating"}}}])
+
+ * Find all products where the stock quantity is less than 10.
+
+ 7. db.products.find({ stock_quantity : {$lt : 10}})
+
+ * Retrieve all products with a specific brand (e.g., BrandX).
+
+ 8. db.products.find({brand : "BrandX"})
+
+ * Find all products where the storage is 128GB and RAM is 8GB.
+
+ 9. db.products.find({"attributes.storage":"128GB","attributes.RAM":"8GB"})
+
+ * Retrieve all products with a specific user's review (e.g., user_id: ObjectId("987654321098765432109876")).
+
+ 10.db.products.find({ "reviews.user_id": ObjectId("987654321098765432109876") })
+
+ * Calculate the total number of reviews for each product.
+
+ 11.db.products.aggregate([{ $project: { product_name: 1, totalReviews: { $size: "$reviews" } } }])
+
+ * Find all products with a price between $400 and $600.
+
+ 12.db.products.find({ price: { $gte: 400, $lte: 600 } })
+
+ * Find all products with a specific category (e.g., "Mobile") and a stock quantity greater than 50.
+
+ 13.db.products.find({ category: "Mobile", stock_quantity: { $gt: 50 } })
+
+ * Find the highest rated product.
+
+ 14.db.products.aggregate([{ $unwind: "$reviews" },{ $group: { _id: "$_id", averageRating: { $avg: "$reviews.rating" }, product_name: { $first: "$product_name" } } },
+    { $sort: { averageRating: -1 } },{ $limit: 1 }])
+
+ * Retrieve all products sorted by brand in ascending order and then by price in descending order.
+
+ 15.db.products.find().sort({ brand: 1, price: -1 })
+
+ * Find all products with a specific comment in their reviews (e.g., "Great phone!").
+
+ 16.db.products.find({ "reviews.comment": "Great phone!" })
